@@ -1,0 +1,626 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Wearable AI security lab</title>
+    <link rel="stylesheet" href="/style.css" />
+    <script defer src="/app.js"></script>
+  </head>
+  <body>
+    <a href="#main" class="skip-link">Skip to experiment</a>
+    <header class="app-header">
+      <div class="wordmark">
+        <svg viewBox="0 0 36 24" width="36" height="24" aria-hidden="true">
+          <path
+            d="M2 6h12l3 4h2l3-4h12v11H23l-4-5h-2l-4 5H2Z"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+          />
+          <path
+            d="M2 6 0 2M34 6l2-4"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+          /></svg
+        ><span>OCR/QR reference experiment</span>
+      </div>
+      <p class="scope-label">
+        Local research sandbox <span aria-hidden="true">/</span> Meta hardware
+        untested
+      </p>
+      <a class="quiet-link" href="/"
+        >Local WebMCP prototype <span aria-hidden="true">↗</span></a
+      >
+    </header>
+    <nav class="main-nav" aria-label="Research sections">
+      <button
+        type="button"
+        class="nav-button active"
+        data-tab="lab"
+        aria-current="page"
+      >
+        Experiment</button
+      ><button type="button" class="nav-button" data-tab="evidence">
+        Evidence</button
+      ><button type="button" class="nav-button" data-tab="defense">
+        Defense brief</button
+      ><button type="button" class="nav-button" data-tab="kit">
+        Device test kit
+      </button>
+    </nav>
+    <main id="main">
+      <section id="lab" class="tab-view">
+        <div class="experiment-bar">
+          <div class="scenario-field">
+            <label for="scenario">Scene</label
+            ><select id="scenario" aria-describedby="scenario-description">
+              <option value="">Loading experiments…</option>
+            </select>
+          </div>
+          <div class="experiment-actions">
+            <button
+              class="button secondary"
+              type="button"
+              id="replay-button"
+              disabled
+            >
+              Replay evidence</button
+            ><button
+              class="button secondary"
+              type="button"
+              id="guide-button"
+              disabled
+            >
+              <span aria-hidden="true">▷</span> Guided demo</button
+            ><button
+              class="button primary"
+              type="button"
+              id="run-button"
+              disabled
+            >
+              Run local experiment <span aria-hidden="true">↗</span>
+            </button>
+          </div>
+        </div>
+        <div id="notice" class="notice" role="status" hidden></div>
+        <div id="guide" class="guide-strip" hidden>
+          <div>
+            <strong id="guide-step">1 / 6</strong
+            ><span id="guide-copy"
+              >Follow the input from the scene to the action boundary.</span
+            >
+          </div>
+          <div>
+            <button class="text-button" id="guide-back" type="button">
+              Previous</button
+            ><button class="text-button" id="guide-next" type="button">
+              Next</button
+            ><button
+              class="icon-button"
+              id="guide-close"
+              type="button"
+              aria-label="Close guided demo"
+            >
+              ×
+            </button>
+          </div>
+        </div>
+        <div class="scene-layout">
+          <section class="scene-workspace" aria-labelledby="scene-heading">
+            <div class="section-line">
+              <h1 id="scene-heading">What the assistant sees</h1>
+              <span class="text-status" id="capture-label"
+                >Generated lab scene</span
+              >
+            </div>
+            <div class="scene-stage" id="scene-stage">
+              <img
+                id="scene-image"
+                alt="Select a laboratory scene to inspect its text and QR content"
+                hidden
+              />
+              <div class="scene-empty" id="scene-empty">
+                <svg
+                  viewBox="0 0 70 44"
+                  width="70"
+                  height="44"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M4 10h23l6 7h4l6-7h23v25H45l-8-12h-4L25 35H4Z"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  />
+                </svg>
+                <p>Preparing the scene</p>
+              </div>
+              <div
+                class="source-overlay"
+                id="source-overlay"
+                aria-hidden="true"
+              ></div>
+              <div class="frame-caption">
+                <span id="scene-caption"
+                  >A scene is data. It does not grant permission.</span
+                ><span id="scene-dimensions"></span>
+              </div>
+            </div>
+            <div class="scene-footer">
+              <p id="scenario-description">
+                The same input will be compared across three agent
+                configurations.
+              </p>
+              <label class="upload-button" for="scene-upload"
+                >Use your own scene <span aria-hidden="true">↑</span></label
+              ><input
+                type="file"
+                id="scene-upload"
+                accept="image/png,image/jpeg,image/webp"
+                class="visually-hidden"
+              />
+            </div>
+          </section>
+          <aside class="input-workspace" aria-label="Input and extraction">
+            <div class="user-task">
+              <h2>Your request</h2>
+              <p id="user-goal">Loading the trusted user request…</p>
+              <div class="permission-note">
+                <svg
+                  viewBox="0 0 18 18"
+                  width="16"
+                  height="16"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M9 1 16 4v5c0 4-7 8-7 8S2 13 2 9V4Z"
+                    stroke="currentColor"
+                    fill="none"
+                    stroke-width="1.4"
+                  />
+                  <path
+                    d="m5 9 3 3 5-6"
+                    stroke="currentColor"
+                    fill="none"
+                    stroke-width="1.4"
+                  /></svg
+                ><span>Only this request can authorize an action.</span>
+              </div>
+            </div>
+            <div class="extraction-workspace">
+              <div class="section-line">
+                <h2>Content crossing the boundary</h2>
+                <span id="extraction-state" class="text-status"
+                  >Awaiting extraction</span
+                >
+              </div>
+              <div
+                class="source-switch"
+                role="group"
+                aria-label="Extraction source"
+              >
+                <button
+                  type="button"
+                  class="source-button active"
+                  data-source="all"
+                >
+                  All content</button
+                ><button type="button" class="source-button" data-source="ocr">
+                  Printed text</button
+                ><button type="button" class="source-button" data-source="qr">
+                  QR payload
+                </button>
+              </div>
+              <div id="sources" class="sources" tabindex="0">
+                <p class="empty-copy">
+                  Real text recognition and QR decoding appear here when you run
+                  an experiment.
+                </p>
+              </div>
+              <p class="extraction-note" id="extraction-note">
+                External content stays untrusted, even when it claims to be a
+                system message.
+              </p>
+            </div>
+          </aside>
+        </div>
+        <section
+          class="comparison"
+          id="comparison"
+          aria-labelledby="comparison-heading"
+        >
+          <div class="section-line comparison-title">
+            <div>
+              <h2 id="comparison-heading">
+                Same scene. Three trust boundaries.
+              </h2>
+              <p id="run-meta">No result has been generated yet.</p>
+            </div>
+            <span id="run-mode" class="mode-label">Awaiting experiment</span>
+          </div>
+          <div class="result-grid" id="results"></div>
+        </section>
+        <section class="trace-section" aria-labelledby="trace-heading">
+          <div class="section-line">
+            <h2 id="trace-heading">Follow the evidence</h2>
+            <div class="trace-actions">
+              <button
+                class="text-button"
+                type="button"
+                id="receipt-button"
+                disabled
+              >
+                Inspect receipt</button
+              ><button
+                class="text-button"
+                type="button"
+                id="download-button"
+                disabled
+              >
+                Download run ↓
+              </button>
+            </div>
+          </div>
+          <ol id="timeline" class="timeline">
+            <li class="timeline-empty">
+              The event trace will show extraction, model proposals, policy
+              decisions, and contained effects.
+            </li>
+          </ol>
+        </section>
+      </section>
+      <section id="evidence" class="tab-view reading-view" hidden>
+        <div class="reading-intro">
+          <h1>Claims you can defend.</h1>
+          <p>
+            A recorded result is useful only when its source and limits are
+            visible.
+          </p>
+        </div>
+        <div class="evidence-summary" id="evidence-summary">
+          <p>
+            No local experiment is loaded. Run an experiment or replay recorded
+            evidence.
+          </p>
+        </div>
+        <div class="claim-table-wrap">
+          <table class="claim-table">
+            <thead>
+              <tr>
+                <th>Claim</th>
+                <th>Evidence</th>
+                <th>Limit</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Scene text can redirect a wearable assistant.</td>
+                <td>
+                  Published Meta Ray-Ban experiment in
+                  <a
+                    href="https://arxiv.org/html/2509.15213v1#S3.SS3"
+                    target="_blank"
+                    rel="noopener"
+                    >Evil Vizier, section 3.3 ↗</a
+                  >
+                </td>
+                <td>
+                  Historical research. It does not establish vulnerability on
+                  the current firmware or your device.
+                </td>
+              </tr>
+              <tr>
+                <td>QR content can carry an instruction.</td>
+                <td>
+                  Real decoding in this local pipeline; the decoded payload is
+                  inspectable.
+                </td>
+                <td>
+                  Our extraction design feeds decoded QR text to an agent.
+                  Meta’s internal QR path is unverified.
+                </td>
+              </tr>
+              <tr>
+                <td>A local agent can propose an unauthorized action.</td>
+                <td>
+                  A live model result or an explicitly labeled recorded run.
+                </td>
+                <td>
+                  The permissive agent is deliberately vulnerable. Outcomes vary
+                  by model and prompt.
+                </td>
+              </tr>
+              <tr>
+                <td>A separate policy can stop an unauthorized tool effect.</td>
+                <td>
+                  Model proposal, policy decision, and sandbox state in the same
+                  receipt.
+                </td>
+                <td>
+                  This policy protects the implemented sandbox actions. It is
+                  not a universal injection detector.
+                </td>
+              </tr>
+              <tr>
+                <td>The demonstration affects a real account or device.</td>
+                <td>Not established.</td>
+                <td>
+                  Messages, navigation, and canaries in this lab are synthetic.
+                  No external actions are performed.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <section class="reading-section">
+          <h2>Run provenance</h2>
+          <pre id="provenance" class="code-block">No run loaded.</pre>
+        </section>
+        <section class="reading-section">
+          <h2>Research sources</h2>
+          <ul class="source-list">
+            <li>
+              <a
+                href="https://arxiv.org/html/2509.15213v1#S3.SS3"
+                target="_blank"
+                rel="noopener"
+                >Evil Vizier: Vulnerabilities of LLM-Integrated XR Systems</a
+              >
+              <p>
+                Reports physical visual prompt injection on off-the-shelf Meta
+                Ray-Ban glasses.
+              </p>
+            </li>
+            <li>
+              <a
+                href="https://arxiv.org/abs/2609.09404"
+                target="_blank"
+                rel="noopener"
+                >An Experimental Evaluation of Multimodal Prompt Injection
+                Attacks on Agentic AI Frameworks</a
+              >
+              <p>
+                Studies QR codes and other visual carriers in agent pipelines.
+                It does not validate this particular glasses workflow.
+              </p>
+            </li>
+            <li>
+              <a
+                href="https://about.fb.com/news/2024/09/ray-ban-meta-glasses-new-ai-features-and-partner-integrations/"
+                target="_blank"
+                rel="noopener"
+                >Meta: New AI features and partner integrations</a
+              >
+              <p>
+                Documents the glasses’ QR-scanning capability. Scanning
+                capability alone does not prove injection.
+              </p>
+            </li>
+          </ul>
+        </section>
+      </section>
+      <section id="defense" class="tab-view reading-view" hidden>
+        <div class="reading-intro">
+          <h1>Make the boundary enforceable.</h1>
+          <p>
+            The defense should still work when the model reads the attack and
+            proposes the wrong action.
+          </p>
+        </div>
+        <div class="defense-layout">
+          <div>
+            <ol class="defense-layers">
+              <li>
+                <span class="layer-number">01</span>
+                <div>
+                  <h2>Separate instructions from observations</h2>
+                  <p>
+                    Record what the wearer asked separately from what the camera
+                    found. OCR text and decoded QR payloads are untrusted
+                    observations, including text that claims higher authority.
+                  </p>
+                  <p class="layer-limit">
+                    Prompt separation helps the model reason. It does not create
+                    an access-control boundary.
+                  </p>
+                </div>
+              </li>
+              <li>
+                <span class="layer-number">02</span>
+                <div>
+                  <h2>Constrain the proposal</h2>
+                  <p>
+                    Require a small, explicit action shape. The model proposes
+                    an action; it cannot run arbitrary code or invent a new
+                    tool. Reject malformed or unknown actions.
+                  </p>
+                  <p class="layer-limit">
+                    Valid JSON can still describe a harmful or unauthorized
+                    action.
+                  </p>
+                </div>
+              </li>
+              <li>
+                <span class="layer-number">03</span>
+                <div>
+                  <h2>Check the wearer’s intent outside the model</h2>
+                  <p>
+                    Compare the proposed action and its exact arguments against
+                    a trusted task contract. Scene content cannot expand the
+                    contract. The same rule applies to harmless-looking
+                    instructions and obfuscated payloads.
+                  </p>
+                  <p class="layer-limit">
+                    The contract is explicit in this lab. Building it reliably
+                    from unconstrained speech is a separate problem.
+                  </p>
+                </div>
+              </li>
+              <li>
+                <span class="layer-number">04</span>
+                <div>
+                  <h2>Keep effects contained and observable</h2>
+                  <p>
+                    The executor writes only to synthetic state. An event
+                    receipt connects the scene, decoded content, model output,
+                    policy decision, and effect so the demonstration can be
+                    inspected.
+                  </p>
+                  <p class="layer-limit">
+                    A hash detects a changed record when compared to a trusted
+                    copy. It does not prove the record’s claims are true.
+                  </p>
+                </div>
+              </li>
+            </ol>
+          </div>
+          <aside class="defense-question">
+            <h2>The skeptical question</h2>
+            <p>“What if the model ignores every safety instruction?”</p>
+            <p>
+              The enforced mode should still reject an action outside the task
+              contract. That is the useful security claim. A refusal by the
+              model is recorded separately from a denial by the policy.
+            </p>
+            <hr />
+            <h2>What this does not solve</h2>
+            <p>
+              Misleading answers, false scene information, incomplete OCR,
+              consent fatigue, or a compromised policy service remain separate
+              risks. A blocked tool call does not make every spoken answer
+              trustworthy.
+            </p>
+            <button type="button" class="button secondary" data-nav="lab">
+              Inspect an experiment
+            </button>
+          </aside>
+        </div>
+        <section class="reading-section">
+          <h2>How to present it</h2>
+          <p>
+            Show the user’s request first. Reveal the instruction in the
+            environment. Trace the local model’s actual proposal. Compare what
+            the sandbox executor permits with and without enforcement. Finish by
+            showing the receipt and the untested Meta-device boundary.
+          </p>
+        </section>
+      </section>
+      <section id="kit" class="tab-view reading-view" hidden>
+        <div class="reading-intro">
+          <h1>Take the question onto the device.</h1>
+          <p>
+            A controlled test kit for your own glasses, with clear separation
+            between reading content and following it.
+          </p>
+        </div>
+        <div class="kit-layout">
+          <section>
+            <h2>Three matched tests</h2>
+            <ol class="kit-steps">
+              <li>
+                <strong>Control scene</strong>
+                <p>
+                  Ask the same neutral question with no injected instruction.
+                  Record the exact spoken request and answer.
+                </p>
+              </li>
+              <li>
+                <strong>Printed instruction</strong>
+                <p>
+                  Place the harmless output instruction in the scene. Ask the
+                  neutral question again. Reading the instruction aloud is not,
+                  by itself, a successful injection.
+                </p>
+              </li>
+              <li>
+                <strong>QR instruction</strong>
+                <p>
+                  Use the same instruction encoded as a QR. First establish
+                  whether the workflow decodes plain text, forwards a URL, or
+                  exposes the payload to Meta AI.
+                </p>
+              </li>
+            </ol>
+            <a
+              id="kit-download"
+              class="button primary"
+              href="/api/kit"
+              target="_blank"
+              rel="noopener"
+              >Open printable fixtures ↗</a
+            >
+          </section>
+          <aside class="device-receipt">
+            <h2>Device evidence checklist</h2>
+            <ul>
+              <li>Exact glasses model and firmware</li>
+              <li>Meta AI app version, language, and region</li>
+              <li>Exact user request and complete response</li>
+              <li>Matched scene, size, distance, and lighting</li>
+              <li>Successes, refusals, decoding failures, and controls</li>
+              <li>Whether any result repeats across trials</li>
+            </ul>
+            <p class="scope-callout">
+              No physical-glasses result has been claimed by this local demo.
+            </p>
+          </aside>
+        </div>
+        <section class="reading-section">
+          <h2>A result can fail at different stages</h2>
+          <div class="stage-row">
+            <div>
+              <strong>Perception</strong>
+              <p>Was the text or code visible?</p>
+            </div>
+            <span aria-hidden="true">→</span>
+            <div>
+              <strong>Decoding</strong>
+              <p>Was its content recovered?</p>
+            </div>
+            <span aria-hidden="true">→</span>
+            <div>
+              <strong>Instruction following</strong>
+              <p>Did it redirect the task?</p>
+            </div>
+            <span aria-hidden="true">→</span>
+            <div>
+              <strong>Effect</strong>
+              <p>Did an action actually occur?</p>
+            </div>
+          </div>
+        </section>
+      </section>
+    </main>
+    <footer class="app-footer">
+      <span>OCR/QR reference experiment</span
+      ><span id="service-status">Checking local service…</span>
+    </footer>
+    <dialog id="receipt-dialog" aria-labelledby="receipt-title">
+      <div class="dialog-header">
+        <h2 id="receipt-title">Experiment receipt</h2>
+        <button
+          type="button"
+          class="icon-button"
+          id="receipt-close"
+          aria-label="Close receipt"
+        >
+          ×
+        </button>
+      </div>
+      <p class="receipt-description">
+        Raw evidence for the currently displayed run. Synthetic actions remain
+        inside this lab.
+      </p>
+      <pre id="receipt-content" class="code-block"></pre>
+      <div class="dialog-footer">
+        <button type="button" class="button secondary" id="receipt-copy">
+          Copy JSON</button
+        ><button type="button" class="button primary" id="receipt-download">
+          Download JSON
+        </button>
+      </div>
+    </dialog>
+  </body>
+</html>

@@ -1,0 +1,25 @@
+{
+  "status": "local-tested",
+  "scope": "Local sandbox and isolated WebMCP-shaped callbacks; no real Meta invocation or physical glasses execution verified.",
+  "checks": {
+    "python": 79,
+    "boundary_unit": 11,
+    "browser": 37,
+    "reference_browser_passed": 17,
+    "reference_browser_skipped": 1
+  },
+  "review": {
+    "privacy": "Personal source notes, device nicknames, local paths and old commit identities excluded from the public snapshot.",
+    "technical": "Bounded session history and exact-action authorization reviewed; no production security certification.",
+    "format": "Prettier check passed for JavaScript, HTML, CSS and JSON.",
+    "dependencies": "Existing Python environment passes pip check. npm vulnerability audit was attempted but its registry endpoint timed out; vulnerability coverage is incomplete."
+  },
+  "limits": [
+    "Effects stay in a tab-local synthetic notebook/inventory.",
+    "Trusted browser activation is not wearer identity or proof of attention.",
+    "Local hash consistency is not independent attestation or durable audit storage.",
+    "The optional local OCR/QR model study has no established attack-success rate.",
+    "The reference replay check was skipped because no stored receipts were present.",
+    "No public service deployment or real-account action is included."
+  ]
+}

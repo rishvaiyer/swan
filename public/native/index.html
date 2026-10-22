@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Swan · Action boundary</title>
+    <link rel="stylesheet" href="/native/native.css" />
+    <script type="module" src="/native/native.mjs"></script>
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>Swan</h1>
+        <a href="/reference">OCR/QR reference experiment</a>
+      </header>
+      <p id="host-status" role="status">Checking native tools…</p>
+      <p class="scope">
+        Local WebMCP prototype. Meta device execution and compatible hardware
+        are unverified.
+      </p>
+      <section aria-label="Proposed change">
+        <div class="row">
+          <h2>Proposed change</h2>
+          <span id="origin">No request yet</span>
+        </div>
+        <p id="proposal">
+          Ask a compatible WebMCP host to propose a sandbox note, or use the
+          local harness below.
+        </p>
+        <p id="target"></p>
+        <button id="confirm" disabled>Confirm exact change</button
+        ><button id="apply" disabled>Apply approved change</button>
+      </section>
+      <section aria-label="Sandbox state">
+        <div class="row">
+          <h2>Sandbox state</h2>
+          <span id="revision">Revision 0</span>
+        </div>
+        <p id="note">Nothing saved yet.</p>
+        <p id="result" role="status">No approval has been granted.</p>
+      </section>
+      <div class="harness">
+        <button id="stage">Local harness: propose note</button
+        ><button id="mutate" disabled>Try changed body</button
+        ><button id="download">Export receipt</button>
+      </div>
+      <footer id="scope">
+        Changes stay in this tab’s demo notebook and inventory. No external
+        action or Meta device result is verified.
+      </footer>
+    </main>
+  </body>
+</html>

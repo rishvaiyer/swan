@@ -1,0 +1,22 @@
+{
+  "name": "swan-security-research",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Local exact-action approval prototype with a WebMCP adapter and OCR/QR reference experiments.",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": ".venv/bin/python -m pytest -q",
+    "test:python": ".venv/bin/python -m pytest -q",
+    "test:browser": "node scripts/browser_verify.cjs",
+    "demo:record": "node scripts/record_demo.cjs",
+    "start": ".venv/bin/python -m uvicorn app.main:app --host 127.0.0.1 --port 8766",
+    "test:native": "node --test tests/native-boundary.test.mjs && node tests/native-browser.cjs",
+    "test:reference": "node scripts/browser_verify.cjs",
+    "demo:native": "node tests/native-demo.cjs"
+  },
+  "devDependencies": {
+    "playwright": "1.64.1"
+  }
+}
