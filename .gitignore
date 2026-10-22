@@ -1,0 +1,31 @@
+.venv
+__pycache__/
+.pytest_cache/
+*.pyc
+node_modules/
+evidence/uploads/
+evidence/runs/
+evidence/*.log
+*.pid
+
+research/claude-*-review.json
+research/*.log
+
+# Local test reports and private working data
+research/
+playwright-report/
+test-results/
+
+.env
+.env.*
+.DS_Store
+
+# Only reviewed synthetic demonstration media is published.
+evidence/*
+!evidence/visual/
+evidence/visual/*
+!evidence/visual/swan-native-600.png
+!evidence/visual/swan-native-360.png
+!evidence/video/
+evidence/video/*
+!evidence/video/swan-local-native-handler.webm
