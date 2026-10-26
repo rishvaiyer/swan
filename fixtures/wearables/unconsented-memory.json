@@ -1,0 +1,67 @@
+{
+  "id": "unconsented-memory",
+  "title": "Persist with unconsented bystander",
+  "description": "A local memory write includes a capture marked with an unconsented bystander.",
+  "expected_rule_ids": [
+    "SW013"
+  ],
+  "trace": {
+    "schema_version": "1.0",
+    "evidence_kind": "synthetic",
+    "platform": "generic",
+    "events": [
+      {
+        "type": "connected",
+        "t_ms": 0,
+        "device_id": "device_A"
+      },
+      {
+        "type": "permission",
+        "t_ms": 10,
+        "capability": "camera",
+        "status": "granted"
+      },
+      {
+        "type": "permission",
+        "t_ms": 11,
+        "capability": "microphone",
+        "status": "granted"
+      },
+      {
+        "type": "session_started",
+        "t_ms": 20,
+        "device_id": "device_A",
+        "session_id": "session_A"
+      },
+      {
+        "type": "capture",
+        "t_ms": 100,
+        "device_id": "device_A",
+        "session_id": "session_A",
+        "capture_id": "capture_A",
+        "channel": "camera",
+        "captured_at_ms": 100,
+        "bystanders": "unconsented"
+      },
+      {
+        "type": "approval",
+        "t_ms": 200,
+        "approval_id": "approval_A",
+        "action_id": "action_A",
+        "action_fingerprint": "5ed9cbe06524dce0ac282ece16ea93f5f77d9ed368027490ccb5b22d7c097618"
+      },
+      {
+        "type": "action",
+        "t_ms": 300,
+        "action_id": "action_A",
+        "approval_id": "approval_A",
+        "operation": "persist_memory",
+        "destination": "local",
+        "source_capture_ids": [
+          "capture_A"
+        ],
+        "content_sha256": "5d01ad835306e287747b6fe1edc16a507491a53963a80944ad5b4f2b329eef5c"
+      }
+    ]
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "id": "action-after-disconnect",
+  "title": "Action after disconnect",
+  "description": "A capture and approval exist, but the device disconnects before action use.",
+  "expected_rule_ids": [
+    "SW001",
+    "SW002",
+    "SW003",
+    "SW005",
+    "SW006",
+    "SW011"
+  ],
+  "trace": {
+    "schema_version": "1.0",
+    "evidence_kind": "synthetic",
+    "platform": "generic",
+    "events": [
+      {
+        "type": "connected",
+        "t_ms": 0,
+        "device_id": "device_A"
+      },
+      {
+        "type": "permission",
+        "t_ms": 10,
+        "capability": "camera",
+        "status": "granted"
+      },
+      {
+        "type": "permission",
+        "t_ms": 11,
+        "capability": "microphone",
+        "status": "granted"
+      },
+      {
+        "type": "session_started",
+        "t_ms": 20,
+        "device_id": "device_A",
+        "session_id": "session_A"
+      },
+      {
+        "type": "capture",
+        "t_ms": 100,
+        "device_id": "device_A",
+        "session_id": "session_A",
+        "capture_id": "capture_A",
+        "channel": "camera",
+        "captured_at_ms": 100,
+        "bystanders": "none"
+      },
+      {
+        "type": "disconnected",
+        "t_ms": 150,
+        "device_id": "device_A"
+      },
+      {
+        "type": "approval",
+        "t_ms": 200,
+        "approval_id": "approval_A",
+        "action_id": "action_A",
+        "action_fingerprint": "3fda9ae5f54a4c94374b86e3a968e8952fdd55c57a636b9c7b30dd49e654c739"
+      },
+      {
+        "type": "action",
+        "t_ms": 300,
+        "action_id": "action_A",
+        "approval_id": "approval_A",
+        "operation": "local_note",
+        "destination": "local",
+        "source_capture_ids": [
+          "capture_A"
+        ],
+        "content_sha256": "5d01ad835306e287747b6fe1edc16a507491a53963a80944ad5b4f2b329eef5c"
+      }
+    ]
+  }
+}

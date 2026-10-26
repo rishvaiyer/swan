@@ -29,3 +29,12 @@ evidence/visual/*
 !evidence/video/
 evidence/video/*
 !evidence/video/swan-local-native-handler.webm
+
+# Local packaging and review outputs
+*.egg-info/
+build/
+dist/
+node_modules
+
+!evidence/visual/swan-wearable-review-1440.png
+!evidence/visual/swan-wearable-review-390.png

@@ -1,4 +1,4 @@
-"""Loopback research service. Every apparent action stays inside a fresh mock world."""
+"""Loopback wearable trace review and isolated action-boundary experiments."""
 import copy
 import hashlib
 import json
@@ -9,13 +9,14 @@ import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Literal
-from urllib.parse import urlsplit
 
 from fastapi import FastAPI, File, HTTPException, Request, UploadFile
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, ConfigDict, Field
+from app.local_http import install_local_boundary
 from app.model import infer, model_metadata
+from app.wearable_api import router as wearable_router
 from app.perception import MAX_BYTES, inspect_image_bytes, perceive_image
 from app.policy import default_state, evaluate, execute
 from app.receipts import RUNS_DIR, list_receipts, store_receipt, verify_receipt, verify_chain, ReceiptIntegrityError
@@ -33,37 +34,7 @@ async def receipt_integrity_failure(request, exc):
     return JSONResponse({"detail": str(exc), "evidence_valid": False}, status_code=409)
 
 
-@app.middleware("http")
-async def local_boundary(request, call_next):
-    host = request.headers.get("host", "").split(":", 1)[0]
-    if host not in {"127.0.0.1", "localhost"}:
-        return JSONResponse({"detail": "Loopback host required."}, status_code=403)
-    origin = request.headers.get("origin")
-    if origin:
-        try:
-            parsed = urlsplit(origin)
-            origin_host = parsed.netloc
-        except ValueError:
-            origin_host = ""
-            parsed = None
-        if origin_host != request.headers.get("host") or not parsed or parsed.scheme not in {"http", "https"}:
-            return JSONResponse({"detail": "Cross-origin requests are not accepted."}, status_code=403)
-    if request.method in {"POST", "PUT", "PATCH"}:
-        try:
-            length = int(request.headers.get("content-length", "-1"))
-        except ValueError:
-            length = -1
-        if length < 0:
-            return JSONResponse({"detail": "A bounded Content-Length is required."}, status_code=411)
-        if length > MAX_BYTES + 65536:
-            return JSONResponse({"detail": "Request body is too large."}, status_code=413)
-    response = await call_next(request)
-    response.headers["X-Content-Type-Options"] = "nosniff"
-    response.headers["Referrer-Policy"] = "no-referrer"
-    response.headers["Cache-Control"] = "no-store"
-    response.headers["Content-Security-Policy"] = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data:; connect-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'"
-    return response
-
+install_local_boundary(app, MAX_BYTES + 65536)
 
 class RunInput(BaseModel):
     model_config = ConfigDict(extra="forbid")
@@ -260,7 +231,7 @@ app.mount("/assets", StaticFiles(directory=PUBLIC / "assets"), name="assets")
 
 @app.get("/")
 def index():
-    return FileResponse(PUBLIC / "native" / "index.html")
+    return FileResponse(PUBLIC / "wearables" / "index.html")
 
 @app.get("/reference")
 def reference():
@@ -282,3 +253,6 @@ def research():
     return FileResponse(path, media_type="application/json")
 
 app.mount("/native", StaticFiles(directory=PUBLIC / "native", html=True), name="native")
+
+app.include_router(wearable_router)
+app.mount("/wearables", StaticFiles(directory=PUBLIC / "wearables", html=True), name="wearables")

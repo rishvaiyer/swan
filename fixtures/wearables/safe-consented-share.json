@@ -1,0 +1,65 @@
+{
+  "id": "safe-consented-share",
+  "title": "Consented external share",
+  "description": "A current capture marked consented is shared through the declared external destination.",
+  "expected_rule_ids": [],
+  "trace": {
+    "schema_version": "1.0",
+    "evidence_kind": "synthetic",
+    "platform": "generic",
+    "events": [
+      {
+        "type": "connected",
+        "t_ms": 0,
+        "device_id": "device_A"
+      },
+      {
+        "type": "permission",
+        "t_ms": 10,
+        "capability": "camera",
+        "status": "granted"
+      },
+      {
+        "type": "permission",
+        "t_ms": 11,
+        "capability": "microphone",
+        "status": "granted"
+      },
+      {
+        "type": "session_started",
+        "t_ms": 20,
+        "device_id": "device_A",
+        "session_id": "session_A"
+      },
+      {
+        "type": "capture",
+        "t_ms": 100,
+        "device_id": "device_A",
+        "session_id": "session_A",
+        "capture_id": "capture_A",
+        "channel": "camera",
+        "captured_at_ms": 100,
+        "bystanders": "consented"
+      },
+      {
+        "type": "approval",
+        "t_ms": 200,
+        "approval_id": "approval_A",
+        "action_id": "action_A",
+        "action_fingerprint": "646f97f588aaa2cf6769be599f3a367f243ddfd79d4c71f3ad7a99dd9b6263fd"
+      },
+      {
+        "type": "action",
+        "t_ms": 300,
+        "action_id": "action_A",
+        "approval_id": "approval_A",
+        "operation": "external_send",
+        "destination": "external",
+        "source_capture_ids": [
+          "capture_A"
+        ],
+        "content_sha256": "5d01ad835306e287747b6fe1edc16a507491a53963a80944ad5b4f2b329eef5c"
+      }
+    ]
+  }
+}

@@ -1,0 +1,287 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Swan wearable metadata trace v1",
+  "description": "Declared metadata, not hardware attestation. One monotonic clock and one active device. Runtime validator additionally checks ordering, 2 MiB serialization and lifecycle policy.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "evidence_kind", "platform", "events"],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "evidence_kind": {
+      "enum": ["synthetic", "recorded"],
+      "type": "string"
+    },
+    "platform": {
+      "enum": ["meta-dat-ios", "meta-dat-android", "generic"],
+      "type": "string"
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "max_capture_age_ms": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 60000,
+          "default": 5000
+        },
+        "max_approval_age_ms": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 15000,
+          "default": 15000
+        }
+      }
+    },
+    "events": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 5000,
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "const": "connected"
+              },
+              "t_ms": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "device_id": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9_-]{1,64}$"
+              }
+            },
+            "required": ["type", "t_ms", "device_id"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "const": "disconnected"
+              },
+              "t_ms": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "device_id": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9_-]{1,64}$"
+              }
+            },
+            "required": ["type", "t_ms", "device_id"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "const": "permission"
+              },
+              "t_ms": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "capability": {
+                "enum": ["camera", "microphone"],
+                "type": "string"
+              },
+              "status": {
+                "enum": ["granted", "revoked"],
+                "type": "string"
+              }
+            },
+            "required": ["type", "t_ms", "capability", "status"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "const": "session_started"
+              },
+              "t_ms": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "device_id": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9_-]{1,64}$"
+              },
+              "session_id": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9_-]{1,64}$"
+              }
+            },
+            "required": ["type", "t_ms", "device_id", "session_id"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "const": "session_stopped"
+              },
+              "t_ms": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "session_id": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9_-]{1,64}$"
+              }
+            },
+            "required": ["type", "t_ms", "session_id"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "const": "capture"
+              },
+              "t_ms": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "device_id": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9_-]{1,64}$"
+              },
+              "session_id": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9_-]{1,64}$"
+              },
+              "capture_id": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9_-]{1,64}$"
+              },
+              "channel": {
+                "enum": ["camera", "microphone", "ocr", "qr"],
+                "type": "string"
+              },
+              "captured_at_ms": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "bystanders": {
+                "enum": ["none", "consented", "unconsented", "unknown"],
+                "type": "string"
+              }
+            },
+            "required": [
+              "type",
+              "t_ms",
+              "device_id",
+              "session_id",
+              "capture_id",
+              "channel",
+              "captured_at_ms",
+              "bystanders"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "const": "approval"
+              },
+              "t_ms": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "approval_id": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9_-]{1,64}$"
+              },
+              "action_id": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9_-]{1,64}$"
+              },
+              "action_fingerprint": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              }
+            },
+            "required": [
+              "type",
+              "t_ms",
+              "approval_id",
+              "action_id",
+              "action_fingerprint"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "const": "action"
+              },
+              "t_ms": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "action_id": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9_-]{1,64}$"
+              },
+              "approval_id": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9_-]{1,64}$"
+              },
+              "operation": {
+                "enum": ["local_note", "external_send", "persist_memory"],
+                "type": "string"
+              },
+              "destination": {
+                "enum": ["local", "external"],
+                "type": "string"
+              },
+              "source_capture_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9_-]{1,64}$"
+                },
+                "minItems": 1,
+                "maxItems": 64,
+                "uniqueItems": true
+              },
+              "content_sha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              }
+            },
+            "required": [
+              "type",
+              "t_ms",
+              "action_id",
+              "approval_id",
+              "operation",
+              "destination",
+              "source_capture_ids",
+              "content_sha256"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      }
+    }
+  }
+}

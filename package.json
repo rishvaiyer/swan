@@ -1,8 +1,8 @@
 {
   "name": "swan-security-research",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
-  "description": "Local exact-action approval prototype with a WebMCP adapter and OCR/QR reference experiments.",
+  "description": "Offline wearable-security trace auditing with a local review screen and exact-action approval experiments.",
   "engines": {
     "node": ">=22"
   },
@@ -14,7 +14,9 @@
     "start": ".venv/bin/python -m uvicorn app.main:app --host 127.0.0.1 --port 8766",
     "test:native": "node --test tests/native-boundary.test.mjs && node tests/native-browser.cjs",
     "test:reference": "node scripts/browser_verify.cjs",
-    "demo:native": "node tests/native-demo.cjs"
+    "demo:native": "node tests/native-demo.cjs",
+    "test:wearables": ".venv/bin/python -m pytest -q tests/test_wearable_audit.py tests/test_wearable_fixtures.py tests/test_wearable_api.py",
+    "test:wearables:browser": "node tests/wearable-browser.cjs"
   },
   "devDependencies": {
     "playwright": "1.64.1"

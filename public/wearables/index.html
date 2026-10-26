@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <title>Swan · Wearable trace review</title>
+    <link rel="stylesheet" href="/wearables/style.css" />
+    <script defer src="/wearables/app.js"></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="wordmark" href="/" aria-label="Swan home">Swan</a>
+      <nav aria-label="Project links">
+        <a href="https://github.com/rishvaiyer/swan" rel="noreferrer"
+          >Source and setup</a
+        >
+        <a href="/api/wearables/schema">Trace schema</a>
+      </nav>
+    </header>
+    <main>
+      <section class="page-intro" aria-labelledby="page-title">
+        <h1 id="page-title">Wearable trace review</h1>
+        <p>
+          Review a supplied event trace against a small, explicit action policy.
+        </p>
+      </section>
+      <aside class="scope-note" aria-label="Scope and limitations">
+        <strong>Trace review only.</strong> Device and permission events are
+        supplied metadata. This page does not control or attest Meta glasses,
+        inspect camera or microphone data, or prove that reported events
+        happened.
+      </aside>
+
+      <section class="source-section" aria-labelledby="source-title">
+        <div class="section-heading">
+          <h2 id="source-title">Choose a trace</h2>
+          <span id="source-kind" class="source-kind">Synthetic example</span>
+        </div>
+        <div class="source-grid">
+          <div class="field">
+            <label for="case-select">Curated example</label>
+            <select id="case-select" disabled>
+              <option value="">Loading examples…</option>
+            </select>
+            <p id="case-description" class="field-note" aria-live="polite">
+              Loading local examples.
+            </p>
+          </div>
+          <div class="field">
+            <label for="trace-file">Or open a JSON trace</label>
+            <input
+              id="trace-file"
+              type="file"
+              accept=".json,application/json"
+            />
+            <p class="field-note">
+              Maximum 2 MiB. The file is sent only to this local service for
+              review.
+            </p>
+          </div>
+        </div>
+        <div class="review-actions">
+          <button id="review-button" type="button" disabled>
+            Review trace
+          </button>
+          <span id="input-status" role="status">Choose a trace to begin.</span>
+        </div>
+        <p id="error-message" class="error-message" role="alert" hidden></p>
+      </section>
+
+      <section class="results-section" aria-labelledby="timeline-title">
+        <div class="section-heading">
+          <h2 id="timeline-title">Event history</h2>
+          <span id="event-count" class="section-count">No trace loaded</span>
+        </div>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Time</th>
+                <th scope="col">Event</th>
+                <th scope="col">Summary</th>
+              </tr>
+            </thead>
+            <tbody id="event-rows"></tbody>
+          </table>
+          <p id="timeline-empty" class="empty-state">
+            The trace timeline will appear here.
+          </p>
+        </div>
+      </section>
+
+      <section
+        class="results-section"
+        aria-labelledby="report-title"
+        aria-live="polite"
+      >
+        <div class="section-heading">
+          <h2 id="report-title">Review findings</h2>
+          <div class="download-actions">
+            <button id="download-json" type="button" disabled>
+              Download JSON
+            </button>
+            <button id="download-sarif" type="button" disabled>
+              Download SARIF
+            </button>
+          </div>
+        </div>
+        <div id="report-empty" class="empty-state">
+          Run a review to see policy findings.
+        </div>
+        <div id="report-content" hidden>
+          <dl id="report-summary" class="summary-list"></dl>
+          <p id="report-message" class="report-message"></p>
+          <ol id="finding-list" class="finding-list"></ol>
+          <details class="limitations">
+            <summary>What this report cannot establish</summary>
+            <ul id="limitation-list"></ul>
+          </details>
+        </div>
+      </section>
+      <footer>
+        <p>
+          Local metadata analysis. Digests are reported claims, not proof of the
+          underlying content.
+        </p>
+      </footer>
+    </main>
+  </body>
+</html>

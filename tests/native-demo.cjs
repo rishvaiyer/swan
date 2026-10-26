@@ -10,7 +10,7 @@ const fs = require("node:fs");
     recordVideo: { dir: "evidence/video", size: { width: 600, height: 600 } },
   });
   const page = await context.newPage();
-  await page.goto(process.env.LAB_URL || "http://127.0.0.1:8766");
+  await page.goto(process.env.LAB_URL || "http://127.0.0.1:8766/native/");
   await page.waitForTimeout(7000);
   await page.locator("#stage").click();
   await page.waitForTimeout(8000);

@@ -139,7 +139,7 @@ fs.mkdirSync(out, { recursive: true });
     );
   }
   check("no JavaScript runtime errors", errors.length === 0, errors);
-  const nativeURL = new URL("/", new URL(base).origin).href;
+  const nativeURL = new URL("/native/", new URL(base).origin).href;
   await page.goto(nativeURL, { waitUntil: "networkidle" });
   check(
     "native route is labeled as a prototype",

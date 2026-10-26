@@ -2,6 +2,7 @@ const { chromium } = require("playwright");
 const fs = require("node:fs");
 const assert = require("node:assert/strict");
 const base = process.env.LAB_URL || "http://127.0.0.1:8766";
+const nativePage = new URL("/native/", base).href;
 const checks = [];
 (async () => {
   const browser = await chromium.launch({
@@ -15,7 +16,7 @@ const checks = [];
     assert.ok(v, name);
     checks.push({ name, passed: true });
   };
-  await page.goto(base);
+  await page.goto(nativePage);
   ok("Swan native primary", (await page.title()) === "Swan · Action boundary");
   ok(
     "ordinary browser honestly unavailable",
@@ -128,7 +129,7 @@ const checks = [];
     ),
   );
 
-  await page.goto(base + "/native/");
+  await page.goto(nativePage);
   await page.evaluate(async () => {
     const { SwanBoundary, registerNativeTools } =
       await import("/native/boundary.mjs");
@@ -340,7 +341,7 @@ const checks = [];
       return registerNativeTools({}, window.testBoundary).available === false;
     }),
   );
-  await page.goto(base);
+  await page.goto(nativePage);
   await page.locator("#stage").evaluate((button) => {
     for (let i = 0; i < 1010; i += 1) button.click();
   });
@@ -358,7 +359,7 @@ const checks = [];
       (await page.locator("#apply").isDisabled()) &&
       (await page.locator("#revision").innerText()) === "Revision 0",
   );
-  const reference = await page.request.get(base + "/reference");
+  const reference = await page.request.get(new URL("/reference", base).href);
   ok(
     "OCR/QR reference route retained",
     reference.ok() &&

@@ -1,0 +1,51 @@
+{
+  "schema_version": "1.0",
+  "evidence_kind": "synthetic",
+  "platform": "meta-dat-android",
+  "events": [
+    {
+      "type": "connected",
+      "t_ms": 0,
+      "device_id": "device-1"
+    },
+    {
+      "type": "permission",
+      "t_ms": 10,
+      "capability": "camera",
+      "status": "granted"
+    },
+    {
+      "type": "session_started",
+      "t_ms": 20,
+      "device_id": "device-1",
+      "session_id": "session-1"
+    },
+    {
+      "type": "capture",
+      "t_ms": 100,
+      "device_id": "device-1",
+      "session_id": "session-1",
+      "capture_id": "frame-1",
+      "channel": "camera",
+      "captured_at_ms": 100,
+      "bystanders": "none"
+    },
+    {
+      "type": "approval",
+      "t_ms": 200,
+      "approval_id": "approval-1",
+      "action_id": "action-1",
+      "action_fingerprint": "e8f97752745013508fbf6eb3a513e65d3445d489e653d2890bbbba085835d452"
+    },
+    {
+      "type": "action",
+      "t_ms": 300,
+      "action_id": "action-1",
+      "approval_id": "approval-1",
+      "operation": "local_note",
+      "destination": "local",
+      "source_capture_ids": ["frame-1"],
+      "content_sha256": "ffe31411dfef26a5d15b1f2a7e3c069a702cc77844f8c41ab23490fede561861"
+    }
+  ]
+}

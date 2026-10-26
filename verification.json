@@ -1,25 +1,46 @@
 {
+  "version": "0.2.0",
   "status": "local-tested",
-  "scope": "Local sandbox and isolated WebMCP-shaped callbacks; no real Meta invocation or physical glasses execution verified.",
+  "scope": "Offline wearable metadata trace auditing and local browser review. No real Meta invocation, physical-glasses execution or runtime device enforcement verified.",
   "checks": {
-    "python": 79,
-    "boundary_unit": 11,
-    "browser": 37,
+    "python": 188,
+    "wearable_browser": 42,
+    "synthetic_wearable_cases": 25,
+    "sarif_reports_validated_against_official_schema": 25,
+    "legacy_boundary_unit": 11,
+    "legacy_browser": 37,
     "reference_browser_passed": 17,
-    "reference_browser_skipped": 1
+    "reference_browser_not_run": 1,
+    "installed_cli_without_site_packages": "passed"
   },
   "review": {
-    "privacy": "Personal source notes, device nicknames, local paths and old commit identities excluded from the public snapshot.",
-    "technical": "Bounded session history and exact-action authorization reviewed; no production security certification.",
-    "format": "Prettier check passed for JavaScript, HTML, CSS and JSON.",
-    "dependencies": "Existing Python environment passes pip check. npm vulnerability audit was attempted but its registry endpoint timed out; vulnerability coverage is incomplete."
+    "security": "Independent source review against release spec: no material unresolved findings. SARIF metadata hardening applied after review.",
+    "privacy": "Pattern scan of 103 tracked files (86 text files) found no matches for checked personal identities, private paths/destinations or credential patterns. Only synthetic fixtures and reviewed demo images are included; this is not an exhaustive privacy guarantee.",
+    "format": "Ruff format/check for new Python; Prettier for new web assets, docs and workflow.",
+    "dependencies": {
+      "python_locked_packages_scanned": 37,
+      "python_known_vulnerabilities": 0,
+      "python_skipped_packages": 0,
+      "npm_known_vulnerabilities": 0,
+      "limitation": "Advisory scans are point-in-time checks, not proof of absence of vulnerabilities."
+    }
+  },
+  "benchmark": {
+    "events": 5000,
+    "input_bytes": 826896,
+    "median_ms": 70.22,
+    "runs": 7,
+    "peak_traced_python_bytes": 5598107,
+    "scope": "Synthetic all-capture trace, parsing plus validation plus audit, one local Python3.12 process; not a hardware or competitor benchmark."
   },
   "limits": [
-    "Effects stay in a tab-local synthetic notebook/inventory.",
-    "Trusted browser activation is not wearer identity or proof of attention.",
-    "Local hash consistency is not independent attestation or durable audit storage.",
-    "The optional local OCR/QR model study has no established attack-success rate.",
-    "The reference replay check was skipped because no stored receipts were present.",
-    "No public service deployment or real-account action is included."
+    "Events, timestamps, bystander status, approval and content hashes are supplied metadata, not independently attested evidence.",
+    "A clean audit does not prove an integration or action is safe; a finding does not mean Swan blocked a real action.",
+    "One active device and one monotonic clock per trace; use fresh permission state and capture-ready session epochs after reconnect.",
+    "The auditor processes no raw camera/audio/transcript content and cannot detect bystanders or semantic prompt injection.",
+    "The optional metadata-only review server is loopback-only and has no media/model routes. Legacy OCR experiments retain their own local artifacts.",
+    "The reference replay browser check was not run because no stored receipts were present.",
+    "The benchmark is a local synthetic workload, not a hardware or competitor performance comparison.",
+    "Public GitHub CI status is checked separately after push."
   ]
 }
